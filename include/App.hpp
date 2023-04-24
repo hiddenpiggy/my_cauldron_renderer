@@ -2,20 +2,18 @@
 #define APP_HPP
 #include "Renderer.hpp"
 #include "vulkan/vulkan.hpp"
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <string>
 namespace hiddenpiggy {
 class App {
 public:
-  App(const std::string AppName, int width, int height)
-      : m_AppName(AppName), m_width(width), m_height(height) {}
-  void OnCreate();
+  void OnCreate(const std::string AppName, uint32_t width, uint32_t height);
   void run();
   void OnDestroy();
   void OnResize();
   void OnUpdate();
   void SetExtent(int width, int height);
-  vk::SurfaceKHR CreateWindowSurface(vk::Instance instance);
 
 private:
   std::string m_AppName;

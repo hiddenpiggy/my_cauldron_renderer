@@ -1,12 +1,21 @@
 #include "App.hpp"
 #include "GLFW/glfw3.h"
+#include "Renderer.hpp"
 #include "vulkan/vulkan_core.h"
 #include <cassert>
 #include <iostream>
 namespace hiddenpiggy {
-void App::OnCreate() {
+void App::OnCreate(const std::string AppName, uint32_t width, uint32_t height) {
+  m_AppName = AppName;
+  m_width = width;
+  m_height = height;
+  
   assert(glfwInit() != 0);
   assert(glfwVulkanSupported() != 0);
+  //it is necessary for vulkan use
+  glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+  
   m_pWindow =
       glfwCreateWindow(m_width, m_height, m_AppName.c_str(), nullptr, nullptr);
 
@@ -15,8 +24,8 @@ void App::OnCreate() {
 
   // set window's user ptr to this App object so that I can call OnResize()
   glfwSetWindowUserPointer(m_pWindow, this);
-  m_pRenderer = new Renderer(m_AppName, m_width, m_height);
-  m_pRenderer->OnCreate();
+  m_pRenderer = new Renderer();
+  m_pRenderer->OnCreate(m_AppName, m_width, m_height, m_pWindow);
 }
 
 void App::run() {
@@ -24,6 +33,7 @@ void App::run() {
     glfwPollEvents();
     // do something
     this->OnUpdate();
+    m_pRenderer->OnDraw();
   }
 }
 
@@ -37,14 +47,8 @@ void App::OnDestroy() {
   glfwTerminate();
 }
 
-void App::OnResize() {}
-
-vk::SurfaceKHR App::CreateWindowSurface(vk::Instance instance) {
-  VkSurfaceKHR surface{};
-  VkResult res =
-      glfwCreateWindowSurface(instance, m_pWindow, nullptr, &surface);
-  assert(res == VK_SUCCESS);
-  return surface;
+void App::OnResize() {
+  m_pRenderer->OnResize();
 }
 
 void App::OnUpdate() { m_pRenderer->OnUpdate(); }

@@ -2,8 +2,6 @@
 #define VK_CONTEXT_HPP
 
 #include "vulkan/vulkan.hpp"
-#include "vulkan/vulkan_handles.hpp"
-#include "vulkan/vulkan_structs.hpp"
 #include <optional>
 #include <string>
 #include <vector>
@@ -18,18 +16,32 @@ public:
   std::vector<const char *> getEnabledInstanceLayers();
   vk::PhysicalDevice getPhysicalDevice();
   vk::Device getDevice();
+  vk::Instance getInstance();
 
   // queue family index definition
-  struct QueueFamilyIndex {
+  typedef struct QueueFamilyIndex {
     std::optional<uint32_t> graphicsFamilyIndex;
     std::optional<uint32_t> presentFamilyIndex;
     std::optional<uint32_t> computeFamilyIndex;
-  };
+  } QueueFamilyIndices;
+
+  QueueFamilyIndices getQueueFamilyIndices();
+  
+  vk::Queue getGraphicsQueue() const { return m_graphicsQueue; }
+  vk::Queue getPresentQueue() const { return m_presentQueue; }
+  vk::Queue getComputeQueue() const { return m_computeQueue; }
 
 protected:
   vk::Instance m_Instance;
   vk::PhysicalDevice m_PhysicalDevice;
   vk::Device m_Device;
+
+  //Graphics queues
+  vk::Queue m_graphicsQueue;
+  vk::Queue m_presentQueue;
+  vk::Queue m_computeQueue;
+
+
   VkDebugUtilsMessengerEXT m_debugUtilsMessenger;
   struct QueueFamilyIndex m_queueFamilyIndices;
 

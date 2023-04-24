@@ -3,8 +3,8 @@
 #include <iostream>
 
 int main(int argc, char **argv) {
-  hiddenpiggy::App app("Window", 640, 480);
-  app.OnCreate();
+  hiddenpiggy::App app{};
+  app.OnCreate("HelloWindow", 640, 480);
   app.run();
   app.OnDestroy();
   return 0;

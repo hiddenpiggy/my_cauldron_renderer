@@ -294,10 +294,13 @@ void VkContext::OnCreate(const std::string AppName) {
 
   // add raytracing features to requiredExtensions
   std::vector<std::string> requiredDeviceExtensions{
-      VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME,
-      VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME,
-      VK_KHR_RAY_QUERY_EXTENSION_NAME,
-      VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME};
+      VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+       VK_KHR_SYNCHRONIZATION_2_EXTENSION_NAME
+      //VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME,
+      //VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME,
+      //VK_KHR_RAY_QUERY_EXTENSION_NAME,
+      //VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME
+  };
 
   std::vector<std::string> requiredDeviceLayers{"VK_LAYER_KHRONOS_validation"};
 
@@ -381,6 +384,11 @@ void VkContext::OnCreate(const std::string AppName) {
 
   deviceCreateInfo.pNext = &deviceFeatures2;
   m_Device = m_PhysicalDevice.createDevice(deviceCreateInfo);
+
+  //get queue
+  m_graphicsQueue = m_Device.getQueue(m_queueFamilyIndices.graphicsFamilyIndex.value(), 0);
+  m_presentQueue = m_Device.getQueue(m_queueFamilyIndices.presentFamilyIndex.value(), 0);
+  m_computeQueue = m_Device.getQueue(m_queueFamilyIndices.computeFamilyIndex.value(), 0);
 }
 
 void VkContext::OnDestroy() {
@@ -392,6 +400,12 @@ void VkContext::OnDestroy() {
 vk::PhysicalDevice VkContext::getPhysicalDevice() { return m_PhysicalDevice; }
 
 vk::Device VkContext::getDevice() { return m_Device; }
+
+vk::Instance VkContext::getInstance() { return m_Instance; }
+
+VkContext::QueueFamilyIndices VkContext::getQueueFamilyIndices() {
+  return m_queueFamilyIndices;
+}
 
 std::vector<const char *> VkContext::getEnabledInstanceExtensions() {
   return m_EnabledInstanceExtensions;
