@@ -2,6 +2,7 @@
 #include "Model.hpp"
 #include "VkShaderModuleFactory.hpp"
 #include "vulkan/vulkan_enums.hpp"
+#include "glTFScene.hpp"
 
 namespace hiddenpiggy {
 void VkSwapchainGraphicsPipeline::createShaderStages() {
@@ -35,12 +36,12 @@ void VkSwapchainGraphicsPipeline::OnCreate() {
   vertexInputStateCreateInfo.vertexBindingDescriptionCount = 1;
   //vertexInputStateCreateInfo.setVertexBindingDescriptionCount(0);
   //vertexInputStateCreateInfo.setVertexAttributeDescriptionCount(0);
-  auto bindingDescription = Vertex::getBindingDescription();
+  auto bindingDescription = gltfVertex::getBindingDescription();
   vertexInputStateCreateInfo.pVertexBindingDescriptions = &bindingDescription;
   vertexInputStateCreateInfo.vertexAttributeDescriptionCount =
-      static_cast<uint32_t>(Vertex::getAttributeDescriptions().size());
+      static_cast<uint32_t>(gltfVertex::getAttributeDescriptions().size());
   vertexInputStateCreateInfo.pVertexAttributeDescriptions =
-         Vertex::getAttributeDescriptions().data();
+         gltfVertex::getAttributeDescriptions().data();
 
   // Input assembly state
   vk::PipelineInputAssemblyStateCreateInfo inputAssemblyStateCreateInfo;

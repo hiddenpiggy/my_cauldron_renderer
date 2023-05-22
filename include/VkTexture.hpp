@@ -9,7 +9,6 @@ namespace hiddenpiggy {
 class VulkanTexture {
 public:
     VulkanTexture(VkContext *pContext, BufferPool *pBufferPool, ResourceUploadHeap *pResourceUploadHeap) : m_pContext(pContext), m_pBufferPool(pBufferPool), m_pResourceUploadHeap(pResourceUploadHeap) {}
-
     void OnCreate(const std::string filename);
     void OnDestroy();
 

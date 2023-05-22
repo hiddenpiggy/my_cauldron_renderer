@@ -17,5 +17,17 @@ layout(location = 1) out vec2 fragTexCoord;
 void main() {
     gl_Position = ubo.proj * ubo.view * ubo.model * vec4(inPosition, 1.0);
     fragTexCoord = inTexCoord;
-    fragColor = vec3(1.0f, 0.0f, 0.0f);
+    fragColor = inNormal;
+
+    if(dot(vec3(1.0f, 0.0f, 0.0f), inNormal) > 0.0f) {
+        fragColor = vec3(1.0f, 0.0f, 0.0f);
+    } else if(dot(vec3(0.0f, 1.0f, 0.0f), inNormal) > 0.0f){
+        fragColor = vec3(0.0f, 1.0f, 0.0f);
+    } else if(dot(vec3(0.0f, 0.0f, 1.0f), inNormal) > 0.0f){
+        fragColor = vec3(0.0f, 0.0f, 1.0f);
+    } else if(dot(vec3(0.0f, 0.0f, -1.0f), inNormal) > 0.0f){
+        fragColor = vec3(0.0f, 0.0f, 1.0f);
+    } else if(dot(vec3(0.0f, -1.0f, 0.0f), inNormal) > 0.0f){
+        fragColor = vec3(0.0f, 1.0f, 0.0f);
+    }
 }

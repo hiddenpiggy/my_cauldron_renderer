@@ -1,5 +1,7 @@
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
+#include "Timer.hpp"
+#include "Camera.hpp"
 #include "UniformBuffers.hpp"
 #include "VkContext.hpp"
 #include "VkSwapchain.hpp"
@@ -11,7 +13,10 @@
 #include "ResourceUploadHeap.hpp"
 #include "Model.hpp"
 #include "VkTexture.hpp"
-#include "Scene.hpp"
+#include "glTFScene.hpp"
+#include "vulkan/vulkan_handles.hpp"
+#include "vulkan/vulkan_structs.hpp"
+#include "UI.hpp"
 
 namespace hiddenpiggy {
 class Renderer {
@@ -24,16 +29,15 @@ public:
   void OnDestroy();
   void OnResize();
 
-  void loadScene(const std::string filename);
-
+    //current delta time
+  float getCurrentDeltaTime() {
+    return m_deltaTime;
+  }
 
 private:
   std::string m_AppName;
   GLFWwindow *m_pWindow;
   int m_width, m_height;
-
-  //scene
-  Scene scene;
 
   // Memory Management
   BufferPool *m_pBufferPool;
@@ -45,13 +49,14 @@ private:
   VkSwapchainFramebuffers *m_pFramebuffers = nullptr;
   VkSwapchainGraphicsPipeline *m_swapchainPipeline = nullptr;
 
-  // swapchain resource binding
-  struct ResourceBinding {
-    vk::DescriptorPool m_descriptorPool;
-    std::vector<vk::DescriptorSetLayout> m_descriptorSetLayouts;
-    vk::PipelineLayout m_pipelineLayout;
-    std::vector<vk::DescriptorSet> m_descriptorSets;
-  };
+   // swapchain resource binding
+   struct ResourceBinding {
+     vk::DescriptorPool m_descriptorPool;
+     std::vector<vk::DescriptorSetLayout> m_descriptorSetLayouts;
+     vk::PipelineLayout m_pipelineLayout;
+     std::vector<vk::DescriptorSet> m_descriptorSets;
+   };
+
 
   ResourceBinding m_swapchainResourceBinding;
 
@@ -63,10 +68,27 @@ private:
   UniformBuffers *m_pUniformBuffers;
 
   //Model
-  std::vector<Model> m_models;
+  std::vector<glTFModel> m_models;
 
   //Texture
   std::vector<VulkanTexture *> m_textures;
+
+  //Cameras
+  std::vector<Camera> m_cameras;
+
+  //Timer class 
+  Timer m_timer;
+
+  //Place holder for UI
+  UI* m_ui;
+
+  //placeholder for deltatime
+  float m_deltaTime = 0.0f;
+
+  //place holder for time of prev frame
+  float m_prevTime = 0.0f;
+
+
 };
 } // namespace hiddenpiggy
 #endif
